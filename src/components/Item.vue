@@ -12,10 +12,10 @@
 					{{data.description}}
 				</p>
 				<div class="columns">
-					<span class="column stars">
+					<span class="column stars box">
 						Starts : {{data.nbStars}}
 					</span>
-					<span class=" column essues">
+					<span class=" column essues box">
 						Issues : {{data.nbEssues}}
 					</span>
 					<span class="column is-three-fifths">
