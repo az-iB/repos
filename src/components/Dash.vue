@@ -1,10 +1,13 @@
 <template>
-	<section class="container">
+	<div class="container is-fullheight">
+			
 		<div v-for="repo in repos" :key="repo.id">
 			<Item  :data="repo" />
 		</div>
 
-	</section>
+		<a v-if="bottomOfWindow" class="button is-loading">Loading</a>
+
+	</div>
 </template>
 
 <script>
@@ -26,6 +29,10 @@ export default {
 		getData (page = 0) {
 			axios.get(`https://api.github.com/search/repositories?q=created:>2017-10-22&sort=stars&order=desc&page=${page}`)
 			.then(res => this.parsData(res.data))
+			.catch(err => {
+				// eslint-disable-next-line
+				console.log(err)
+			})
 		},
 		// parsing the list of repos
 		parsData (data) {
@@ -50,6 +57,7 @@ export default {
 			} else {
 				this.repos = mapedData
 			}
+			this.bottomOfWindow = false
 			
 		},
 		getDaysNb (date) {
@@ -63,7 +71,10 @@ export default {
 		scroll () {
 			// add scroll event listner to fitch new repos by hiting the bottom of the page 
 			window.onscroll = () => {
-				this.bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight
+				this.bottomOfWindow = document.documentElement.scrollTop + window.innerHeight == document.documentElement.offsetHeight
+				if (this.bottomOfWindow) {
+					this.getData(this.page)
+				}
 			}
 		},
 	},
@@ -74,11 +85,6 @@ export default {
 		this.scroll()
 	},
 	watch: {
-		bottomOfWindow (val) {
-			if (val) {
-				this.getData(this.page)
-			}
-		}
 	},
 	components: {
 		Item

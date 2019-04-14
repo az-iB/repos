@@ -1,25 +1,27 @@
 <template>
-	<div>
-		<div class="left">
-			<img class="avatar" :src="data.avatar">
-		</div>
-		<div class="right">
-			<span calss="title">
-				{{data.name}}
-			</span>
-			<p class="discription">
-				{{data.description}}
-			</p>
-			<div class="counts">
-				<span class="stars">
-					{{data.nbStars}}
-				</span>
-				<span class="essues">
-					{{data.nbEssues}}
-				</span>
-				<span>
-					{{data.info}}
-				</span>
+	<div class="content is-fluid">
+		<div class="columns is-mobile">
+			<div class="column">
+				<img class="avatar" :src="data.avatar">
+			</div>
+			<div class="column is-four-fifths">
+				<h2 calss="title">
+					{{data.name}}
+				</h2>
+				<p class="discription">
+					{{data.description}}
+				</p>
+				<div class="columns">
+					<span class="column stars">
+						Starts : {{data.nbStars}}
+					</span>
+					<span class=" column essues">
+						Issues : {{data.nbEssues}}
+					</span>
+					<span class="column is-three-fifths">
+						{{data.info}}
+					</span>
+				</div>
 			</div>
 		</div>
 	</div>

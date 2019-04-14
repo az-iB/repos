@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
-   <Dash />
-  </div>
+  <section class="section" id="app">
+    <Dash />
+  </section>
 </template>
 
 <script>
@@ -14,7 +14,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>
