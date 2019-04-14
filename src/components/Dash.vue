@@ -1,6 +1,8 @@
 <template>
 	<section class="container">
-		<Item v-for="repo in repos" :data="repo" />
+		<div v-for="repo in repos" :key="repo.id">
+			<Item  :data="repo" />
+		</div>
 
 	</section>
 </template>
@@ -13,39 +15,64 @@ export default {
 	name: 'Dash',
 	data() {
 		return {
-			repos: {}
+			repos: [],
+			items: [],
+			bottomOfWindow: false,
+			page: 0
 		}
 	},
 	methods: {
 		// getting the data from api
-		getData (page = 1) {
+		getData (page = 0) {
+			// eslint-disable-next-line
+			console.log(page)
 			axios.get(`https://api.github.com/search/repositories?q=created:>2017-10-22&sort=stars&order=desc&page=${page}`)
 			.then(res => this.parsData(res.data))
-			.catch(err => console.log(err))
 		},
 		// parsing the data 
 		parsData (data) {
 			let mapedData = data.items.map((repo) => {
-				let obj = {
+				return {
 					id: repo.id,
 					name: repo.name,
-					avatr: repo.owner.avatar_url,
+					avatar: repo.owner.avatar_url,
 					description: repo.description,
 					nbStars: repo.stargazers_count,
 					nbEssues: repo.open_issues_count 
 				}
-				return obj
 			})
-			// init the repos data set
-			this.repos = mapedData
-		}
+			this.page += 1
+
+			if (this.repos.length > 0) {
+				this.repos = this.repos.filter( repo => ! mapedData.find ( maped => repo['id'] === maped['id']) ).concat(mapedData)
+			} else {
+				this.repos = mapedData
+			}
+			
+		},
+		scroll () {
+			window.onscroll = () => {
+				this.bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight
+			}
+		},
 	},
-	mounted  () {
-		this.getData();
+	beforeMount () {
+		this.getData()
+	},
+	created () {
+		this.scroll()
 	},
 	watch: {
-		repos: (val) => {
+		repos () {
+			// eslint-disable-next-line
+			console.log(this.repos.length)
+		},
+		bottomOfWindow (val) {
+			// eslint-disable-next-line
 			console.log(val)
+			if (val) {
+				this.getData(this.page)
+			}
 		}
 	},
 	components: {
