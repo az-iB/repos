@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="left">
-			<img class="avatar" :src="data.avatr">
+			<img class="avatar" :src="data.avatar">
 		</div>
 		<div class="right">
 			<span calss="title">

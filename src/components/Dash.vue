@@ -22,14 +22,12 @@ export default {
 		}
 	},
 	methods: {
-		// getting the data from api
+		// getting list of repos from api
 		getData (page = 0) {
-			// eslint-disable-next-line
-			console.log(page)
 			axios.get(`https://api.github.com/search/repositories?q=created:>2017-10-22&sort=stars&order=desc&page=${page}`)
 			.then(res => this.parsData(res.data))
 		},
-		// parsing the data 
+		// parsing the list of repos
 		parsData (data) {
 			let mapedData = data.items.map((repo) => {
 				return {
@@ -43,7 +41,9 @@ export default {
 			})
 			this.page += 1
 
+			// afecting parsed data to the repos variable
 			if (this.repos.length > 0) {
+				// filtring the new data by id
 				this.repos = this.repos.filter( repo => ! mapedData.find ( maped => repo['id'] === maped['id']) ).concat(mapedData)
 			} else {
 				this.repos = mapedData
@@ -51,6 +51,7 @@ export default {
 			
 		},
 		scroll () {
+			// add scroll event listner to fitch new repos by hiting the bottom of the page 
 			window.onscroll = () => {
 				this.bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight
 			}
@@ -63,13 +64,7 @@ export default {
 		this.scroll()
 	},
 	watch: {
-		repos () {
-			// eslint-disable-next-line
-			console.log(this.repos.length)
-		},
 		bottomOfWindow (val) {
-			// eslint-disable-next-line
-			console.log(val)
 			if (val) {
 				this.getData(this.page)
 			}
