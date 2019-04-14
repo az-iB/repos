@@ -36,19 +36,26 @@ export default {
 		},
 		// parsing the list of repos
 		parsData (data) {
-			let mapedData = data.items.map((repo) => {
-				return {
+			// filtring the repos get only thes created in the passed 30 days
+			// and map the result to get the neded data
+			let mapedData = data.items.filter(repo => {
+				if( this.getDaysNb(repo.pushed_at) <= 30) {
+					return repo
+				}
+			}).map(repo => {
+					return {
 					id: repo.id,
 					name: repo.name,
 					avatar: repo.owner.avatar_url,
 					description: repo.description,
 					nbStars: repo.stargazers_count,
 					nbEssues: repo.open_issues_count,
-					info: `Submitted ${this.getDaysNb(repo.pushed_at)} by ${repo.owner.login}`
+					info: `Submitted ${this.getDaysNb(repo.pushed_at)} days ago by ${repo.owner.login}`
 				}
 			})
 
 			this.page += 1
+
 
 			// afecting parsed data to the repos variable
 			if (this.repos.length > 0) {
@@ -60,13 +67,9 @@ export default {
 			this.bottomOfWindow = false
 			
 		},
+		// get the number of days from the creation of the repo to the current date
 		getDaysNb (date) {
-			let nbDays = (Date.now() - new Date(date).getTime()) / 86400000
-			if (parseInt(nbDays) >= 1) {
-				return `${parseInt(nbDays)} days ago`
-			} else {
-				return 'less than a day'
-			}
+			return parseInt((Date.now() - new Date(date).getTime()) / 86400000)
 		},
 		scroll () {
 			// add scroll event listner to fitch new repos by hiting the bottom of the page 
