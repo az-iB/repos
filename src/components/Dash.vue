@@ -36,9 +36,11 @@ export default {
 					avatar: repo.owner.avatar_url,
 					description: repo.description,
 					nbStars: repo.stargazers_count,
-					nbEssues: repo.open_issues_count 
+					nbEssues: repo.open_issues_count,
+					info: `Submitted ${this.getDaysNb(repo.pushed_at)} by ${repo.owner.login}`
 				}
 			})
+
 			this.page += 1
 
 			// afecting parsed data to the repos variable
@@ -49,6 +51,14 @@ export default {
 				this.repos = mapedData
 			}
 			
+		},
+		getDaysNb (date) {
+			let nbDays = (Date.now() - new Date(date).getTime()) / 86400000
+			if (parseInt(nbDays) >= 1) {
+				return `${parseInt(nbDays)} days ago`
+			} else {
+				return 'less than a day'
+			}
 		},
 		scroll () {
 			// add scroll event listner to fitch new repos by hiting the bottom of the page 

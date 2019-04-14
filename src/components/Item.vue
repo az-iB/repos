@@ -17,6 +17,9 @@
 				<span class="essues">
 					{{data.nbEssues}}
 				</span>
+				<span>
+					{{data.info}}
+				</span>
 			</div>
 		</div>
 	</div>
